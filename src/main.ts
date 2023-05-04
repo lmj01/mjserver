@@ -1,10 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './module/app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { grpcClientOptions } from './microservices/grpcClient.options';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.connectMicroservice<MicroserviceOptions>(grpcClientOptions);
+  await app.startAllMicroservices();
+  
   // swagger - begin
   const options = new DocumentBuilder()
     .setTitle('api-doc')

@@ -4,9 +4,11 @@ import { FileController } from '../controller/file';
 import { AppService } from '../service/app.service';
 import { UserController } from 'src/controller/user.controller';
 import { UserService } from 'src/service/user.service';
+import { HeroModule } from 'src/microservices/hero/hero.module';
+
 
 @Module({
-  imports: [],
+  imports: [ HeroModule ],
   controllers: [AppController, FileController, UserController],
   providers: [AppService, UserService],
 })
