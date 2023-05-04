@@ -25,7 +25,6 @@ export class HeroController implements OnModuleInit {
 
     onModuleInit() {
         this.heroService = this.client.getService<HeroService>(HERO_SERVICE);
-        console.log('hero module started')
     }
 
     @ApiOkResponse({description: '返回英雄', type: HeroResponse})

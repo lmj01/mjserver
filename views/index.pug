@@ -1,0 +1,41 @@
+doctype html
+html(lang="en")
+    head
+        title= myTitle
+        link(rel='stylesheet' type='text/css' href='./css/demo.css')
+    body
+        form(action="#", method="post")
+            .row 
+                label(for="name") enter name:
+                input(type="text" id="name" name="name")
+            .row
+                label(for="password") enter password:
+                input(type="password" id="password" name="password")
+            .row
+                button#btnSubmit(type="button") submit
+        button#btnProfile get user profile
+        script(type='module').
+            import { postLogin, postProfile, authToken } from './api.mjs';
+            document.getElementById('btnSubmit').addEventListener('click', () => {
+                const data = {
+                    name: document.getElementById('name').value,
+                    password: document.getElementById('password').value,
+                }
+                postLogin(JSON.stringify(data)).then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                        localStorage.setItem(authToken, result.access_token || '');
+                    } else {
+                        console.log(res.response);
+                    }
+                });   
+            });
+            document.getElementById('btnProfile').addEventListener('click', () => {
+                postProfile().then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                    } else {
+                        console.log(res.response);
+                    }
+                })
+            });

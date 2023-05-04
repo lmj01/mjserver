@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF8">
+    <title>client test</title>
+</head>
+<body>
+  <button id="btnLogin">login</button>
+  <script type="module">
+    import { postLogin } from './api.mjs';
+    const data = {
+      name: 'meijie',
+      password: 'changeme',
+    }    
+    document.getElementById('btnLogin').addEventListener('click', ()=>{
+      postLogin(JSON.stringify(data)).then(res=>{
+        console.log(res);
+      })
+    })
+  </script>
+  <script type="text/javascript">
+    
+  </script>
+</body>
+</html>

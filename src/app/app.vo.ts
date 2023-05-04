@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ResponseCommon } from "./common.vo";
+import { ResponseCommon } from "../common/common.vo";
 
 class Info {
     @ApiProperty({description:'返回问候语',example:'hello'})
