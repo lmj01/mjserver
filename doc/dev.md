@@ -23,6 +23,18 @@ yarn add @nestjs/swagger swagger-ui-express
 
 node_modules\.bin\nest g resource users
 
+### mysql
+
+MySQL数据库的字符集不仅包括字符集CHARACTER，还包括校对规则COLLATION
+utf8mb4_0900_ai_ci则是新版本--MySQL 8.0
+字符集
+- ci case insensitive 大小写不敏感
+- cs case sensitive
+- ai accent insensitivity 不区分音调
+- bin 将字符串的每个字符二进制存储，区分大小写
+- 0900 表示UTF8基于unicode规范9.0的版本，发布于2016年6月
+
+
 ## 微服务
 
 - [Microservices a definition of this new architectural term](https://martinfowler.com/articles/microservices.html)

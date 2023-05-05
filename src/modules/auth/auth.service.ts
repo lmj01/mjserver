@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/modules/user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -11,11 +11,11 @@ export class AuthService {
         if (user.password !== pwd) {
             throw new UnauthorizedException();
         }
-        // 出钱password都传给前端
+        // 除去password都传给前端
         const { password, ...result } = user;
         const payload = {
             username: user.name,
-            sub: user.userId,
+            sub: user.id,
         }
 
         return {

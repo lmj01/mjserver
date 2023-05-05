@@ -6,7 +6,7 @@ function request(data, method='post', url='', options={}) {
     return new Promise((resolve)=>{
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
-        if (useJson) xhr.setRequestHeader('content-type', 'application/json');
+        if (useJson) xhr.setRequestHeader('Content-Type', 'application/json');
         if (useToken) xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem(authToken)}`);
         xhr.addEventListener('loadend', (event)=>resolve(event.target));
         xhr.send(data);
