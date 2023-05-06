@@ -6,6 +6,7 @@ import { ClientGrpc, GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices"
 import { HERO_SERVICE, HERO_PACKAGE } from "../constants";
 import { ApiTags, ApiOkResponse } from "@nestjs/swagger";
 import { HeroResponse } from "./hero.vo";
+import { AuthPublic } from "src/modules/auth/auth.decorator";
 
 interface HeroService {
     findOne(data: HeroById): Observable<Hero>;
@@ -28,6 +29,7 @@ export class HeroController implements OnModuleInit {
     }
 
     @ApiOkResponse({description: '返回英雄', type: HeroResponse})
+    @AuthPublic()
     @Get() 
     getMany():Observable<Hero[]> {
         const ids$ = new ReplaySubject<HeroById>();

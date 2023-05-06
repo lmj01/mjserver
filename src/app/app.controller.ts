@@ -10,7 +10,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @ApiOkResponse({description: '返回问候语', type: AppInfoResponse})
-  // @AuthPublic()
+  @AuthPublic()
   @Get()
   @Render('index')
   root() {

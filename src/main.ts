@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -6,7 +6,9 @@ import { MicroserviceOptions } from '@nestjs/microservices';
 import { grpcClientOptions } from './microservices/grpcClient.options';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
-import * as compression from 'compression';
+import { logger } from './middlewares/logger.middleware';
+import { AllExceptionFilter } from './filters/allException.filter';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -16,8 +18,12 @@ async function bootstrap() {
   // 必须手动设置
   app.setViewEngine('pug');
   app.enableCors();
-  app.use(compression);
   
+  // app.use(logger); // 函数时可用于全局
+  const adapterHost = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionFilter(adapterHost.httpAdapter.getInstance())); // 
+  app.useGlobalInterceptors(new LoggingInterceptor()); // 
+
   app.setGlobalPrefix('api', {
     exclude:['/']
   });

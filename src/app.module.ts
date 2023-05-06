@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AppController } from './app/app.controller';
 import { FileController } from './app/file';
@@ -6,7 +6,7 @@ import { AppService } from './app/app.service';
 import { HeroModule } from 'src/microservices/hero/hero.module';
 import { UserModule } from 'src/modules/user/user.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 // import { RoleGuard } from 'src/modules/role/role.guard';
 import { RoleModule } from 'src/modules/role/role.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -15,6 +15,8 @@ import configDatabase from './config/database';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/user/user.entity';
 import { PermissionModule } from './modules/permission/permission.module';
+import { logger } from './middlewares/logger.middleware';
+import { AllExceptionFilter } from './filters/allException.filter';
 
 @Module({
   imports: [
@@ -41,7 +43,7 @@ import { PermissionModule } from './modules/permission/permission.module';
       }),
       inject: [ConfigService],
     }), 
-    // AuthModule, 
+    AuthModule, 
     UserModule,
     HeroModule, 
     ThrottlerModule.forRoot({
@@ -62,6 +64,17 @@ import { PermissionModule } from './modules/permission/permission.module';
     //   provide: APP_GUARD,
     //   useClass: RoleGuard,
     // },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionFilter,
+    }
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(logger)
+      .forRoutes({path: '*', method: RequestMethod.GET});
+      // .forRoutes({ path:'hero', method:RequestMethod.GET});
+  }
+}

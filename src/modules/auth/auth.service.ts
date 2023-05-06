@@ -8,6 +8,11 @@ export class AuthService {
 
     async signIn(name: string, pwd: string) {
         const user = await this.userService.findOne(name);
+        // 没有找到
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        // 密码不对
         if (user.password !== pwd) {
             throw new UnauthorizedException();
         }
