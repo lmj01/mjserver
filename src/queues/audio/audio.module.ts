@@ -1,17 +1,17 @@
 import { Module } from "@nestjs/common";
-import { BullModule } from "@nestjs/bull";
 import { AudioProducerService } from "./audio.producer";
 import { AudioConsumerService } from "./audio.consumer";
-import { nameAudio } from "./constants";
 import { AudioController } from "./audio.controller";
+import { BullModule } from "@nestjs/bull";
+import { queueNameAudio } from "../constants";
 
 @Module({
     imports: [
         BullModule.registerQueue({
-            name: nameAudio,
+            name: queueNameAudio,
         }),
     ],
     controllers: [AudioController],
-    providers: [AudioConsumerService, AudioProducerService],
+    providers: [AudioProducerService, AudioConsumerService],
 })
 export class AudioModule {}

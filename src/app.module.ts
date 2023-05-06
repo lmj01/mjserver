@@ -7,7 +7,6 @@ import { HeroModule } from 'src/microservices/hero/hero.module';
 import { UserModule } from 'src/modules/user/user.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { APP_GUARD, APP_FILTER } from '@nestjs/core';
-// import { RoleGuard } from 'src/modules/role/role.guard';
 import { RoleModule } from 'src/modules/role/role.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configGlobal from './config/global';
@@ -20,6 +19,7 @@ import { PermissionModule } from './modules/permission/permission.module';
 import { logger } from './middlewares/logger.middleware';
 import { AllExceptionFilter } from './filters/allException.filter';
 import { AudioModule } from './queues/audio/audio.module';
+import { MessageModule } from './queues/message/message.module';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { AudioModule } from './queues/audio/audio.module';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService)=>({
+      useFactory: async (configService: ConfigService)=>({
         type: configService.get('database.type') as any,
         host: configService.get('database.host'),
         port: +configService.get('database.port'),
@@ -48,15 +48,16 @@ import { AudioModule } from './queues/audio/audio.module';
     }), 
     BullModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async(configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         redis: {
           host: configService.get('redis.host'),
           port: +configService.get('redis.port'),
         },
+        // url: `http://${configService.get('redis.host')}:${configService.get('redis.port')}`,
+        // redis: `://${configService.get('redis.host')}:${configService.get('redis.port')}`,
       }),
       inject: [ConfigService],
     }),
-    AudioModule,
     AuthModule, 
     UserModule,
     HeroModule, 
@@ -66,6 +67,8 @@ import { AudioModule } from './queues/audio/audio.module';
     }),
     RoleModule,
     PermissionModule,
+    AudioModule,
+    MessageModule,
   ],
   controllers: [AppController, FileController],
   providers: [

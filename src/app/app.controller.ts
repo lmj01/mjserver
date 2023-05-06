@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { AppInfoResponse } from './app.vo';
@@ -15,7 +15,7 @@ export class AppController {
   @Render('index')
   root() {
     return {
-      myTitle: 'Index',
+      myTitle: this.appService.getTitle(),
     }
   }
 }

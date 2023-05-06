@@ -1,15 +1,15 @@
-import { Post, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectQueue } from "@nestjs/bull";
 import { Queue } from "bull";
-import { nameAudio, audioTranscode } from "./constants";
+import { queueNameAudio, queueAudioTranscode } from "../constants";
 
 @Injectable()
 export class AudioProducerService {
-    constructor(@InjectQueue(nameAudio) private readonly audioQueue:Queue) {}
+    constructor(@InjectQueue(queueNameAudio) private queue:Queue) {}
 
     async transcode(filename:string) {
         console.log('to transcode', filename)
-        await this.audioQueue.add(audioTranscode, {
+        await this.queue.add(queueAudioTranscode, {
             file: filename,
         });
     }
