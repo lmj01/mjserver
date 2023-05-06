@@ -13,9 +13,12 @@ html(lang="en")
                 input(type="password" id="password" name="password")
             .row
                 button#btnSubmit(type="button") Login
-        button#btnProfile get user profile
+        .row(style="margin:10px;")
+            button#btnProfile get user profile
+        .row(style="margin:10px;")
+            button#btnAudio transcode audio
         script(type='module').
-            import { postLogin, postProfile, authToken } from './api.mjs';
+            import { postLogin, postProfile, authToken, postAudioTranscode } from './api.mjs';
             document.getElementById('btnSubmit').addEventListener('click', () => {
                 const data = {
                     name: document.getElementById('name').value,
@@ -32,6 +35,15 @@ html(lang="en")
             });
             document.getElementById('btnProfile').addEventListener('click', () => {
                 postProfile().then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                    } else {
+                        console.log(res.response);
+                    }
+                })
+            });
+            document.getElementById('btnAudio').addEventListener('click', () => {
+                postAudioTranscode().then(res => {
                     if (res.status == 200) {
                         const result = JSON.parse(res.response);
                     } else {

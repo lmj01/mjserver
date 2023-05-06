@@ -35,6 +35,10 @@ utf8mb4_0900_ai_ci则是新版本--MySQL 8.0
 - 0900 表示UTF8基于unicode规范9.0的版本，发布于2016年6月
 
 
+### redis
+
+- [按照WSL2上](https://redis.io/docs/getting-started/installation/install-redis-on-windows/)
+
 ## 微服务
 
 - [Microservices a definition of this new architectural term](https://martinfowler.com/articles/microservices.html)

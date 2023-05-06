@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'
 import { UserService } from 'src/modules/user/user.service';
 
@@ -10,7 +10,7 @@ export class AuthService {
         const user = await this.userService.findOne(name);
         // 没有找到
         if (!user) {
-            throw new UnauthorizedException();
+            throw new NotFoundException();
         }
         // 密码不对
         if (user.password !== pwd) {

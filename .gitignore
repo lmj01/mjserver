@@ -398,3 +398,4 @@ Temporary Items
 dist
 *.json
 package-lock.json
+.env.development.local
