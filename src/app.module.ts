@@ -1,12 +1,11 @@
-import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod, Logger } from '@nestjs/common';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AppController } from './app/app.controller';
-import { FileController } from './app/file';
 import { AppService } from './app/app.service';
 import { HeroModule } from 'src/microservices/hero/hero.module';
 import { UserModule } from 'src/modules/user/user.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
-import { APP_GUARD, APP_FILTER } from '@nestjs/core';
+import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { RoleModule } from 'src/modules/role/role.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configGlobal from './config/global';
@@ -16,10 +15,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { User } from './modules/user/user.entity';
 import { PermissionModule } from './modules/permission/permission.module';
-import { logger } from './middlewares/logger.middleware';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { AllExceptionFilter } from './filters/allException.filter';
 import { AudioModule } from './queues/audio/audio.module';
 import { MessageModule } from './queues/message/message.module';
+import { FileModule } from './queues/file/file.module';
+
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { MathModule } from './microservices/math/math.module';
+
+
 
 @Module({
   imports: [
@@ -53,8 +58,6 @@ import { MessageModule } from './queues/message/message.module';
           host: configService.get('redis.host'),
           port: +configService.get('redis.port'),
         },
-        // url: `http://${configService.get('redis.host')}:${configService.get('redis.port')}`,
-        // redis: `://${configService.get('redis.host')}:${configService.get('redis.port')}`,
       }),
       inject: [ConfigService],
     }),
@@ -69,9 +72,12 @@ import { MessageModule } from './queues/message/message.module';
     PermissionModule,
     AudioModule,
     MessageModule,
+    FileModule,
+    MathModule,
   ],
-  controllers: [AppController, FileController],
+  controllers: [AppController],
   providers: [
+    Logger,
     AppService,
     {
       provide: APP_GUARD,
@@ -84,14 +90,18 @@ import { MessageModule } from './queues/message/message.module';
     {
       provide: APP_FILTER,
       useClass: AllExceptionFilter,
-    }
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(logger)
-      .forRoutes({path: '*', method: RequestMethod.GET});
+      .apply(LoggerMiddleware)
+      .forRoutes({path: '*', method: RequestMethod.ALL});
       // .forRoutes({ path:'hero', method:RequestMethod.GET});
   }
 }

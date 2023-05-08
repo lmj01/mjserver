@@ -2,18 +2,24 @@ import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { MicroserviceOptions } from '@nestjs/microservices';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { grpcClientOptions } from './microservices/grpcClient.options';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
-import { logger } from './middlewares/logger.middleware';
 import { AllExceptionFilter } from './filters/allException.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { WinstonModule } from 'nest-winston';
+import { loggerInstance } from './config/configWinston';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    // 直接替换默认的logger
+    logger: WinstonModule.createLogger({
+      instance: loggerInstance,
+    })
+  });
   const configService = app.get(ConfigService);
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
@@ -21,15 +27,37 @@ async function bootstrap() {
   app.setViewEngine('pug');
   app.enableCors();
   
-  // app.use(logger); // 函数时可用于全局
   const adapterHost = app.get(HttpAdapterHost);
-  // app.useGlobalFilters(new AllExceptionFilter(adapterHost.httpAdapter.getInstance())); // 对一些会报错
-  app.useGlobalInterceptors(new LoggingInterceptor()); // 
+  // app.useGlobalFilters(new AllExceptionFilter(app.get('Logger'), adapterHost.httpAdapter.getInstance())); // 对一些会报错
+  // app.useGlobalInterceptors(new LoggingInterceptor(app.get('Logger'))); // 
 
   app.setGlobalPrefix('api', {
     exclude:['/']
   });
+
+  // Hybrid application
+
+  // TCP
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      retryAttempts: 5,
+      retryDelay: 1000,
+    },
+  });
+
+  // Redis
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.REDIS,
+    options: {
+      host: configService.get('redis.host'),
+      port: +configService.get('redis.port'),
+    }
+  })
+
+  // gRPC
   app.connectMicroservice<MicroserviceOptions>(grpcClientOptions);
+
   await app.startAllMicroservices();
   
   // swagger - begin

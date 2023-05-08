@@ -17,6 +17,6 @@ export class AudioController {
     @Post('transcode')
     async transcode() {
         this.producerService.transcode('audio.mp3');
-        return {}
+        return {filename: 'audio.mp3'};
     }
 }
