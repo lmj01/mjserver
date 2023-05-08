@@ -1,4 +1,4 @@
-import { NestFactory, HttpAdapterHost } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -6,12 +6,11 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { grpcClientOptions } from './microservices/grpcClient.options';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
-import { AllExceptionFilter } from './filters/allException.filter';
-import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { WinstonModule } from 'nest-winston';
 import { loggerInstance } from './config/configWinston';
+import { FileModule } from './queues/file/file.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -26,10 +25,6 @@ async function bootstrap() {
   // 必须手动设置
   app.setViewEngine('pug');
   app.enableCors();
-  
-  const adapterHost = app.get(HttpAdapterHost);
-  // app.useGlobalFilters(new AllExceptionFilter(app.get('Logger'), adapterHost.httpAdapter.getInstance())); // 对一些会报错
-  // app.useGlobalInterceptors(new LoggingInterceptor(app.get('Logger'))); // 
 
   app.setGlobalPrefix('api', {
     exclude:['/']
@@ -69,7 +64,7 @@ async function bootstrap() {
     // .addOAuth2()
     .build();
   const document = SwaggerModule.createDocument(app, options, {
-    include:[UserModule]
+    include:[UserModule, FileModule],
   });
   SwaggerModule.setup('api-doc/user', app, document);
 
@@ -79,13 +74,13 @@ async function bootstrap() {
     .setVersion('1.0.0')
     .build();
   const document1 = SwaggerModule.createDocument(app, options1, {
-    include:[AuthModule]
+    include:[AuthModule],
   });
   SwaggerModule.setup('api-doc/auth', app, document1);
   // swagger - end
 
   await app.listen(configService.get('global.port'));
-  app.getUrl().then(res=>{
+  app.getUrl().then(res=>{    
     console.log('listen to', res)
   })
 }

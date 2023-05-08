@@ -15,13 +15,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { User } from './modules/user/user.entity';
 import { PermissionModule } from './modules/permission/permission.module';
-import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { AllExceptionFilter } from './filters/allException.filter';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { AllExceptionFilter } from './common/filters/allException.filter';
 import { AudioModule } from './queues/audio/audio.module';
 import { MessageModule } from './queues/message/message.module';
 import { FileModule } from './queues/file/file.module';
 
-import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { MathModule } from './microservices/math/math.module';
 
 

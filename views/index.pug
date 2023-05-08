@@ -17,8 +17,15 @@ html(lang="en")
             button#btnProfile get user profile
         .row(style="margin:10px;")
             button#btnAudio transcode audio
+        .row(style="margin:10px;")
+            label(for="singleFile") Single File
+            input#singleFile(type="file")
+        .row(style="margin:10px;")
+            label(for="multiFile") Multiple File
+            input#multiFile(type="file", multiple=true)
+
         script(type='module').
-            import { postLogin, postProfile, authToken, postAudioTranscode } from './api.mjs';
+            import { postLogin, postProfile, authToken, postAudioTranscode, postFile, postListFile } from './api.mjs';
             document.getElementById('btnSubmit').addEventListener('click', () => {
                 const data = {
                     name: document.getElementById('name').value,
@@ -44,6 +51,33 @@ html(lang="en")
             });
             document.getElementById('btnAudio').addEventListener('click', () => {
                 postAudioTranscode().then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                    } else {
+                        console.log(res.response);
+                    }
+                })
+            });
+            document.getElementById('singleFile').addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                const formData = new FormData();
+                formData.append('file', file, file.name);
+                formData.append('name', file.name);
+                postFile(formData).then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                    } else {
+                        console.log(res.response);
+                    }
+                })
+            });
+            document.getElementById('multiFile').addEventListener('change', (event) => {
+                const files = event.target.files;
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) 
+                    formData.append('files', files[i], files[i].name);
+                formData.append('name', 'multiFiles name');
+                postListFile(formData).then(res => {
                     if (res.status == 200) {
                         const result = JSON.parse(res.response);
                     } else {

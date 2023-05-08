@@ -29,7 +29,7 @@ export const configWinston = {
 config.addColors(configWinston.colors);
 
 export const transportDailyRotateFile = new DailyRotateFile({
-    dirname: 'mylog',
+    dirname: 'logs',
     filename: `%DATE%.log`,
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,

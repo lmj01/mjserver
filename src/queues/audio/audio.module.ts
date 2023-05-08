@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, Logger } from "@nestjs/common";
 import { AudioProducerService } from "./audio.producer";
 import { AudioConsumerService } from "./audio.consumer";
 import { AudioController } from "./audio.controller";
@@ -12,6 +12,9 @@ import { queueNameAudio } from "../constants";
         }),
     ],
     controllers: [AudioController],
-    providers: [AudioProducerService, AudioConsumerService],
+    providers: [
+        Logger,
+        AudioProducerService, AudioConsumerService
+    ],
 })
 export class AudioModule {}

@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, Logger } from "@nestjs/common";
 import { FileController } from "./file.controller";
 import { BullModule } from "@nestjs/bull";
 import { queueNameFile } from "../constants";
@@ -9,6 +9,9 @@ import { queueNameFile } from "../constants";
             name: queueNameFile,
         }),
     ],
-    controllers: [FileController],    
+    controllers: [FileController], 
+    providers: [
+        Logger,
+    ],   
 })
 export class FileModule {}

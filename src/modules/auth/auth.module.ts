@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from 'src/modules/user/user.module';
@@ -20,6 +20,7 @@ import { AuthGuard } from './auth.guard';
     ],
     controllers: [AuthController],
     providers: [
+        Logger,
         AuthService,
         {
             provide: APP_GUARD,

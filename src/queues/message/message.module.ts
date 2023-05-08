@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, Logger } from "@nestjs/common";
 import { MessageProducerService } from "./message.producer";
 import { MessageConsumerService } from "./message.consumer";
 import { MessageController } from "./message.controller";
@@ -12,6 +12,9 @@ import { BullModule } from "@nestjs/bull";
         }),
     ],
     controllers: [MessageController],
-    providers: [MessageProducerService, MessageConsumerService],
+    providers: [
+        Logger,
+        MessageProducerService, MessageConsumerService
+    ],
 })
 export class MessageModule {}

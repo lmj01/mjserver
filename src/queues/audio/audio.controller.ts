@@ -1,14 +1,15 @@
-import { Controller, Post, Get, Query } from "@nestjs/common";
+import { Controller, Post, Get, Query, Logger } from "@nestjs/common";
 import { AuthPublic } from "../../modules/auth/auth.decorator";
 import { AudioProducerService } from "./audio.producer";
 
 @Controller('audio')
 export class AudioController {
-    constructor(private readonly producerService: AudioProducerService) {}
+    constructor(private readonly producerService: AudioProducerService, private readonly logger:Logger) {}
 
     @AuthPublic()
     @Get('transcode')
     async getTranscode(@Query('filename') filename: string) {
+        this.logger.log('transcode', filename);
         this.producerService.transcode(filename);
         return filename;
     }
