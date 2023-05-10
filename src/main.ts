@@ -11,13 +11,16 @@ import { AuthModule } from './modules/auth/auth.module';
 import { WinstonModule } from 'nest-winston';
 import { loggerInstance } from './config/configWinston';
 import { FileModule } from './queues/file/file.module';
+import { RedisIoAdapter } from './common/adapters/redis.io.adapter';
+import { WsAdapter } from './common/adapters/ws.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     // 直接替换默认的logger
     logger: WinstonModule.createLogger({
       instance: loggerInstance,
-    })
+    }),
+    forceCloseConnections: true, // 
   });
   const configService = app.get(ConfigService);
   app.useStaticAssets(join(__dirname, '..', 'public'));
@@ -54,6 +57,11 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>(grpcClientOptions);
 
   await app.startAllMicroservices();
+
+  // redis
+  // const redisIoAdapter = new RedisIoAdapter(app);
+  // await redisIoAdapter.connectToRedis(configService);
+  app.useWebSocketAdapter(new WsAdapter(app));
   
   // swagger - begin
   const options = new DocumentBuilder()
@@ -74,11 +82,13 @@ async function bootstrap() {
     .setVersion('1.0.0')
     .build();
   const document1 = SwaggerModule.createDocument(app, options1, {
-    include:[AuthModule],
+    include:[AuthModule, AppModule],
   });
   SwaggerModule.setup('api-doc/auth', app, document1);
   // swagger - end
 
+  app.enableShutdownHooks();
+  
   await app.listen(configService.get('global.port'));
   app.getUrl().then(res=>{    
     console.log('listen to', res)

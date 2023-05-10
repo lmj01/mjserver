@@ -399,3 +399,5 @@ dist
 *.json
 package-lock.json
 .env.development.local
+public/index.css
+public/index.css.map

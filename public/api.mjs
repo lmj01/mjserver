@@ -17,8 +17,12 @@ export function postLogin(data) {
     return request(data, 'post', '/api/auth/login', { token: false, json: true });
 }
 
-export function postProfile() {
+export function getProfile() {
     return request(null, 'get', '/api/auth/profile', { token: true, json: true });
+}
+
+export function getFilePackage(type) {
+    return request(null, 'get', '/api/file/package'+type, { token: false, json: true });
 }
 
 export function postAudioTranscode() {

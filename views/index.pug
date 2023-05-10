@@ -2,30 +2,35 @@ doctype html
 html(lang="en")
     head
         title= myTitle
-        link(rel='stylesheet' type='text/css' href='./css/demo.css')
+        link(rel='stylesheet' type='text/css' href='./index.css')
     body
-        form(action="#", method="post")
+        form(action="#", method="post" style="width:200px;")
             .row 
-                label(for="name") enter name:
-                input(type="text" id="name" name="name")
+                label.form-label(for="name") enter name:
+                input.form-control(type="text" id="name" name="name")
             .row
-                label(for="password") enter password:
-                input(type="password" id="password" name="password")
-            .row
-                button#btnSubmit(type="button") Login
-        .row(style="margin:10px;")
-            button#btnProfile get user profile
-        .row(style="margin:10px;")
-            button#btnAudio transcode audio
-        .row(style="margin:10px;")
+                label.form-label(for="password") enter password:
+                input.form-control(type="password" id="password" name="password")
+            .row.my-2
+                button#btnSubmit.btn.btn-primary.w-auto.mx-auto(type="button") Login
+        .row.d-flex(style="margin:10px;")
+            button#btnProfile.btn.btn-primary.w-auto.mx-3 get user profile
+            button#btnGetPackageJson.btn.btn-primary.w-auto.mx-3 get package json 
+            button#btnGetPackageStream.btn.btn-primary.w-auto.mx-3 get package Buffer 
+        .row.d-flex(style="margin:10px;")
+            button#btnAudio.btn.btn-primary.w-auto transcode audio
+        .row.d-flex(style="margin:10px;")
             label(for="singleFile") Single File
-            input#singleFile(type="file")
-        .row(style="margin:10px;")
+            input#singleFile.form-control.w-auto(type="file")
+        .row.d-flex(style="margin:10px;")
             label(for="multiFile") Multiple File
-            input#multiFile(type="file", multiple=true)
+            input#multiFile.form-control.w-auto(type="file", multiple=true)
+        .d-flex 
+            a(href="/api-doc/user") ApiDoc user 
+            a(href="/api-doc/auth") ApiDoc auth 
 
         script(type='module').
-            import { postLogin, postProfile, authToken, postAudioTranscode, postFile, postListFile } from './api.mjs';
+            import { postLogin, getProfile, getFilePackage, authToken, postAudioTranscode, postFile, postListFile } from './api.mjs';
             document.getElementById('btnSubmit').addEventListener('click', () => {
                 const data = {
                     name: document.getElementById('name').value,
@@ -41,7 +46,25 @@ html(lang="en")
                 });   
             });
             document.getElementById('btnProfile').addEventListener('click', () => {
-                postProfile().then(res => {
+                getProfile().then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                    } else {
+                        console.log(res.response);
+                    }
+                })
+            });
+            document.getElementById('btnGetPackageJson').addEventListener('click', () => {
+                getFilePackage(1).then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                    } else {
+                        console.log(res.response);
+                    }
+                })
+            });
+            document.getElementById('btnGetPackageStream').addEventListener('click', () => {
+                getFilePackage(2).then(res => {
                     if (res.status == 200) {
                         const result = JSON.parse(res.response);
                     } else {
@@ -85,3 +108,30 @@ html(lang="en")
                     }
                 })
             });
+        script(type='module').
+            const eventSource = new EventSource('/api/sse');
+            eventSource.addEventListener('see', ({data}) => {
+                console.log('new event message', JSON.parse(data));
+            });
+            setTimeout(() => eventSource.close(), 1000 * 10);
+        script(type='module').
+            const socket = new WebSocket('ws://localhost:9210'
+                //- , ['protocolOne','protocolTwo']
+            );
+            socket.onopen = (e) => {
+                console.log('open', e)
+                socket.send(JSON.stringify({
+                    event: 'identity',
+                    data: 1,
+                }));
+                socket.send(JSON.stringify({
+                    event: 'events',
+                    data: 'test',
+                }))
+            }
+            socket.onmessage = (e) => {
+                console.log('message', e)
+            }
+            socket.onerror = (e) => {
+                console.log('error', e);
+            }

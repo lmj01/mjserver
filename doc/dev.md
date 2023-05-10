@@ -38,6 +38,8 @@ utf8mb4_0900_ai_ci则是新版本--MySQL 8.0
 ### redis
 
 - [按照WSL2上](https://redis.io/docs/getting-started/installation/install-redis-on-windows/)
+- sudo service redis-server start 启动服务
+- ip addr show eth0 | grep 'inet\b' | awk '{print $2}' | cut -d/ -f1 查看wsl中的IP
 
 ## 微服务
 

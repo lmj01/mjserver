@@ -23,6 +23,7 @@ import { FileModule } from './queues/file/file.module';
 
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { MathModule } from './microservices/math/math.module';
+import { EventModule } from './modules/event/event.module';
 
 
 
@@ -74,6 +75,7 @@ import { MathModule } from './microservices/math/math.module';
     MessageModule,
     FileModule,
     MathModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [
