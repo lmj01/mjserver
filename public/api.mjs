@@ -20,6 +20,14 @@ export function getUserInit() {
     return request(null, 'get', '/api/user/init', { token: false, json: true });
 }
 
+export function getUserAll() {
+    return request(null, 'get', '/api/user/all', { token: true, json: true });
+}
+
+export function getUserById(id) {
+    return request(null, 'get', `/api/user/${id}`, { token: true, json: true });
+}
+
 export function getProfile() {
     return request(null, 'get', '/api/auth/profile', { token: true, json: true });
 }

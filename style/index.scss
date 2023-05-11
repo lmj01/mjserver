@@ -1,10 +1,29 @@
 @import './bootstrap';
 
 form {
+    border: 1px dashed lightblue;
     &.index-login {
         width: 200px;
     }
     &.user-create {
         width: 200px;
+    }
+}
+.test-api {
+    border: 1px dashed lightblue;
+}
+.file-area {
+    width: 250px;
+    border: 1px dashed lightblue;
+}
+.btn-api-area {
+    display: flex;
+    @extend .row;
+    margin: $spacer * 0.5;
+    button {
+        @extend .btn;
+        @extend .btn-primary;
+        width: auto;
+        margin: $spacer * 0.2;
     }
 }

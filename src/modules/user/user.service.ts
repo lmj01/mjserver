@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Repository, DataSource } from "typeorm";
 import { User } from "./user.entity";
 import { UserDtoCreate } from "./user.dto";
@@ -11,6 +11,7 @@ export class UserService {
         @InjectRepository(User) private userRepo: Repository<User>, 
         @InjectRepository(Profile) private profileRepo: Repository<Profile>,
         private readonly dataSource:DataSource,
+        private readonly logger:Logger,
     ) {}
 
     async createMany(users: User[]) {
@@ -39,20 +40,36 @@ export class UserService {
         user.name = dto.name;
         user.password = dto.password;
         user.profile = profile;
+        user.isActive = ['admin'].includes(dto.name);
         profile.user = user;
 
         await this.profileRepo.save(profile);
         await this.userRepo.save(user);
         return;
     }
-    async findOneById(userId:number):Promise<User> {        
-        return this.userRepo.findOneById(userId);
+    async findById(userId:number):Promise<User> {        
+        return this.userRepo.findOne({
+            relations: ['profile'],
+            select: {
+                id: true,
+                name: true,
+            },
+            where: {
+                id: userId,
+            },
+        });
     }
     async findOne(username: string): Promise<User> {
         return this.userRepo.findOneBy({name: username});
     }
     async findAll(): Promise<User[]> {
-        return this.userRepo.find();
+        return this.userRepo.find({
+            select: {
+                name: true,
+                id: true,
+                isActive: true,
+            }
+        });
     }
     async remove(id: number):Promise<void> {
         await this.userRepo.delete(id);

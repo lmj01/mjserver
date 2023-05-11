@@ -4,32 +4,40 @@ html(lang="en")
         title= myTitle
         link(rel='stylesheet' type='text/css' href='./index.css')
     body
-        form.index-login.p-2.m-2(action="#", method="post")
-            .row 
-                label.form-label(for="name") enter name:
-                input.form-control(type="text" id="name" name="name")
-            .row
-                label.form-label(for="password") enter password:
-                input.form-control(type="password" id="password" name="password")
-            .row.my-2
-                button#btnSubmit.btn.btn-primary.w-auto.mx-auto(type="button") Login
-        .row.d-flex(style="margin:10px;")
-            button#btnProfile.btn.btn-primary.w-auto.mx-3 get user profile
-            button#btnGetPackageJson.btn.btn-primary.w-auto.mx-3 get package json 
-            button#btnGetPackageStream.btn.btn-primary.w-auto.mx-3 get package Buffer
-            button#btnInitDefault.btn.btn-primary.w-auto.mx-3 init default data
-        .row.d-flex(style="margin:10px;")
-            button#btnAudio.btn.btn-primary.w-auto transcode audio
-        .row.d-flex(style="margin:10px;")
-            label(for="singleFile") Single File
-            input#singleFile.form-control.w-auto(type="file")
-        .row.d-flex(style="margin:10px;")
-            label(for="multiFile") Multiple File
-            input#multiFile.form-control.w-auto(type="file", multiple=true)
+        .d-flex
+            form.index-login.m-2(action="#", method="post")
+                .my-2 
+                    label.form-label(for="name") enter name:
+                    input.form-control(type="text" id="name" name="name")
+                .my-2
+                    label.form-label(for="password") enter password:
+                    input.form-control(type="password" id="password" name="password")
+                .d-flex.my-2
+                    button#btnSubmit.btn.btn-primary.w-auto.mx-auto(type="button") Login
+            .file-area.m-2
+                .row.d-flex.m-2
+                    label(for="singleFile") Single File
+                    input#singleFile.form-control(type="file")
+                .row.d-flex.m-2
+                    label(for="multiFile") Multiple File
+                    input#multiFile.form-control(type="file", multiple=true)
+        .test-api.d-flex.m-2
+            .w-50 
+                .btn-api-area
+                    button#btnProfile get user profile
+                    button#btnGetPackageJson get package json 
+                    button#btnGetPackageStream get package Buffer
+                    button#btnAudio transcode audio
+                    button#btnInitDefault init user
+                    button#btnUserAll get all user
+            .w-50
+                .row.d-flex.m-2
+                    label.form-label user list
+                    select#selectUserList.col-6.form-select
         .d-flex 
-            a(href="/api-doc/user") ApiDoc user 
-            a(href="/api-doc/auth") ApiDoc auth 
-            a(href="/register") Register
+            a.m-2(href="/api-doc/user") ApiDoc user 
+            a.m-2(href="/api-doc/auth") ApiDoc auth 
+            a.m-2(href="/register") Register
 
         script(type='module').
             import { postLogin, getProfile, getFilePackage, authToken, postAudioTranscode, postFile, postListFile, getUserInit } from './api.mjs';
@@ -121,8 +129,11 @@ html(lang="en")
             });
         script(type='module').
             const eventSource = new EventSource('/api/sse');
+            eventSource.onmessage = ({data} => {
+                console.log('event-message', JSON.parse(data));
+            })
             eventSource.addEventListener('see', ({data}) => {
-                console.log('new event message', JSON.parse(data));
+                console.log('event', JSON.parse(data));
             });
             setTimeout(() => eventSource.close(), 1000 * 10);
         script(type='module').
@@ -130,7 +141,7 @@ html(lang="en")
                 //- , ['protocolOne','protocolTwo']
             );
             socket.onopen = (e) => {
-                console.log('open', e)
+                console.log('open')
                 socket.send(JSON.stringify({
                     event: 'identity',
                     data: 1,
@@ -141,8 +152,11 @@ html(lang="en")
                 }))
             }
             socket.onmessage = (e) => {
-                console.log('message', e)
+                console.log(e.data)
             }
             socket.onerror = (e) => {
                 console.log('error', e);
             }
+        script(type='module').
+            import { runTest } from './api.test.mjs';
+            runTest();

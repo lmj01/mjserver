@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Post, Body, Param, ParseIntPipe, Delete } from "@nestjs/common";
+import { Controller, Get, Query, Post, Body, Param, ParseIntPipe, Delete, Logger } from "@nestjs/common";
 import { UserService } from "src/modules/user/user.service";
 import { ApiTags } from "@nestjs/swagger";
 import { User } from "./user.entity";
@@ -9,7 +9,7 @@ import { AuthPublic } from "../auth/auth.decorator";
 @Controller('user')
 export class UserController {
     
-    constructor(private readonly userService: UserService) {
+    constructor(private readonly userService: UserService, private readonly logger:Logger) {
 
     }
     
@@ -19,7 +19,7 @@ export class UserController {
      */
     @Get()
     async getUser(@Query('userId') userId:number):Promise<User> {
-        return this.userService.findOneById(userId);
+        return this.userService.findById(userId);
     }
 
     @AuthPublic()
@@ -48,18 +48,14 @@ export class UserController {
         return this.userService.create(dto);
     }
 
-    @Get()
-    findAll():Promise<User[]> {
-        return this.userService.findAll();
+    @Get('all')
+    async findAll():Promise<User[]> {
+        return await this.userService.findAll();
     }
 
-    /**
-     * http://localhost:9200/api/user?id=2
-     * @param id 
-     */
     @Get(':id')
-    findOne(@Param('id', ParseIntPipe) id: number):Promise<User> {
-        return this.userService.findOneById(id);
+    findOne(@Param('id') id: string):Promise<User> {
+        return this.userService.findById(+id);
     }
 
     @Delete(':id')
