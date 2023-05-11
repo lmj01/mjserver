@@ -21,6 +21,15 @@ export class AppController {
   }
 
   @AuthPublic()
+  @Get('register')
+  @Render('register')
+  register() {
+    return {
+      myTitle: '注册',
+    }
+  }
+  
+  @AuthPublic()
   @Sse('sse')
   sse() : Observable<MessageEvent> {
     return interval(1000 * 3).pipe(map((_) => ({
@@ -28,4 +37,5 @@ export class AppController {
       type: 'sse', // 默认是message，指定后前端也要监听这个字段
     } as MessageEvent)));
   }
+
 }

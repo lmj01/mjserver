@@ -24,6 +24,8 @@ import { FileModule } from './queues/file/file.module';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { MathModule } from './microservices/math/math.module';
 import { EventModule } from './modules/event/event.module';
+// import { ArticleModule } from './modules/article/article.module';
+// import { PhotoModule } from './modules/photo/photo.module';
 
 
 
@@ -63,7 +65,8 @@ import { EventModule } from './modules/event/event.module';
       inject: [ConfigService],
     }),
     AuthModule, 
-    UserModule,
+    UserModule,    
+    // PhotoModule,
     HeroModule, 
     ThrottlerModule.forRoot({
       ttl: 60,
@@ -76,6 +79,7 @@ import { EventModule } from './modules/event/event.module';
     FileModule,
     MathModule,
     EventModule,
+    // ArticleModule,
   ],
   controllers: [AppController],
   providers: [

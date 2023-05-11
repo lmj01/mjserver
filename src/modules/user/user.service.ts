@@ -1,12 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { Repository, DataSource } from "typeorm";
 import { User } from "./user.entity";
-import { UserDto } from "./user.dto";
+import { UserDtoCreate } from "./user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Profile } from "./profile.entity";
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private userRepo: Repository<User>, private readonly dataSource:DataSource) {}
+    constructor(
+        @InjectRepository(User) private userRepo: Repository<User>, 
+        @InjectRepository(Profile) private profileRepo: Repository<Profile>,
+        private readonly dataSource:DataSource,
+    ) {}
 
     async createMany(users: User[]) {
         const queryRunner = this.dataSource.createQueryRunner();
@@ -24,12 +29,21 @@ export class UserService {
             await queryRunner.release();
         }
     }
-    create(userDto:UserDto): Promise<User> {
+    async create(dto:UserDtoCreate): Promise<User> {
+        
+        const profile = new Profile();
+        profile.age = dto.age;
+        profile.gender = dto.gender;
+
         const user = new User();
-        user.name = userDto.name;
-        user.password = userDto.password;
-        user.age = userDto.age;
-        return this.userRepo.save(user);
+        user.name = dto.name;
+        user.password = dto.password;
+        user.profile = profile;
+        profile.user = user;
+
+        await this.profileRepo.save(profile);
+        await this.userRepo.save(user);
+        return;
     }
     async findOneById(userId:number):Promise<User> {        
         return this.userRepo.findOneById(userId);

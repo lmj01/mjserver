@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
-import { Role } from "src/modules/role/role.entity";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne } from "typeorm";
+import { Profile } from './profile.entity';
 
 @Entity()
 export class User {
@@ -11,17 +11,12 @@ export class User {
 
     @Column({length: 50})
     password: string;
-
-    @Column('int')
-    age: number;
-
+    
     @Column({default: false})
     isActive: boolean;
-    
-    /**
-     * 一个用户对应一个角色
-     */
-    @ManyToOne(()=>Role, (role)=>role.user)
-    @JoinColumn({name: 'roleId'})
-    role: Role;
+
+    @OneToOne(()=>Profile, profile=>profile.user)
+    @JoinColumn()
+    profile:Profile;
 }
+

@@ -1,7 +1,6 @@
 
 export const authToken = 'mjTokenForAuth';
 function request(data, method='post', url='', options={}) {
-    const useJson = options.json;
     return new Promise((resolve)=>{
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
@@ -15,6 +14,10 @@ function request(data, method='post', url='', options={}) {
 
 export function postLogin(data) {
     return request(data, 'post', '/api/auth/login', { token: false, json: true });
+}
+
+export function getUserInit() {
+    return request(null, 'get', '/api/user/init', { token: false, json: true });
 }
 
 export function getProfile() {

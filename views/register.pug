@@ -1,0 +1,45 @@
+doctype html
+html(lang="en")
+    head
+        title= myTitle
+        link(rel='stylesheet' type='text/css' href='./index.css')
+    body
+        form.user-create.p-2.m-2(action="#", method="post")
+            .row 
+                label.form-label(for="name") enter name:
+                input.form-control(type="text" id="name" name="name")
+            .row
+                label.form-label(for="password") enter password:
+                input.form-control(type="password" id="password" name="password")
+            .row
+                label.form-label(for="gender") select gender:
+                select.form-select(id="gender" name="gender")
+                    option(value="male") male
+                    option(value="female") female
+                    option(value="unknown") unknown
+            .row
+                label.form-label(for="age") enter age:
+                input.form-control(type="number" min="0" id="age" name="age")
+            .row.my-2
+                button#btnSubmit.btn.btn-primary.w-auto.mx-auto(type="button") create
+        .d-flex 
+            a(href="/") Home Index
+
+        script(type='module').
+            import { postLogin, getProfile, getFilePackage, authToken, postAudioTranscode, postFile, postListFile } from './api.mjs';
+            document.getElementById('btnSubmit').addEventListener('click', () => {
+                const data = {
+                    name: document.getElementById('name').value,
+                    password: document.getElementById('password').value,
+                    gender: document.getElementById('gender').value,
+                    age: document.getElementById('age').value,
+                }
+                postLogin(JSON.stringify(data)).then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                        localStorage.setItem(authToken, result.access_token || '');
+                    } else {
+                        console.log(res.response);
+                    }
+                });   
+            });

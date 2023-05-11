@@ -4,7 +4,7 @@ html(lang="en")
         title= myTitle
         link(rel='stylesheet' type='text/css' href='./index.css')
     body
-        form(action="#", method="post" style="width:200px;")
+        form.index-login.p-2.m-2(action="#", method="post")
             .row 
                 label.form-label(for="name") enter name:
                 input.form-control(type="text" id="name" name="name")
@@ -16,7 +16,8 @@ html(lang="en")
         .row.d-flex(style="margin:10px;")
             button#btnProfile.btn.btn-primary.w-auto.mx-3 get user profile
             button#btnGetPackageJson.btn.btn-primary.w-auto.mx-3 get package json 
-            button#btnGetPackageStream.btn.btn-primary.w-auto.mx-3 get package Buffer 
+            button#btnGetPackageStream.btn.btn-primary.w-auto.mx-3 get package Buffer
+            button#btnInitDefault.btn.btn-primary.w-auto.mx-3 init default data
         .row.d-flex(style="margin:10px;")
             button#btnAudio.btn.btn-primary.w-auto transcode audio
         .row.d-flex(style="margin:10px;")
@@ -28,9 +29,10 @@ html(lang="en")
         .d-flex 
             a(href="/api-doc/user") ApiDoc user 
             a(href="/api-doc/auth") ApiDoc auth 
+            a(href="/register") Register
 
         script(type='module').
-            import { postLogin, getProfile, getFilePackage, authToken, postAudioTranscode, postFile, postListFile } from './api.mjs';
+            import { postLogin, getProfile, getFilePackage, authToken, postAudioTranscode, postFile, postListFile, getUserInit } from './api.mjs';
             document.getElementById('btnSubmit').addEventListener('click', () => {
                 const data = {
                     name: document.getElementById('name').value,
@@ -74,6 +76,15 @@ html(lang="en")
             });
             document.getElementById('btnAudio').addEventListener('click', () => {
                 postAudioTranscode().then(res => {
+                    if (res.status == 200) {
+                        const result = JSON.parse(res.response);
+                    } else {
+                        console.log(res.response);
+                    }
+                })
+            });
+            document.getElementById('btnInitDefault').addEventListener('click', () => {
+                getUserInit().then(res => {
                     if (res.status == 200) {
                         const result = JSON.parse(res.response);
                     } else {

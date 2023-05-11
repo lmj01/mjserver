@@ -11,7 +11,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { WinstonModule } from 'nest-winston';
 import { loggerInstance } from './config/configWinston';
 import { FileModule } from './queues/file/file.module';
-import { RedisIoAdapter } from './common/adapters/redis.io.adapter';
 import { WsAdapter } from './common/adapters/ws.adapter';
 
 async function bootstrap() {
@@ -30,7 +29,10 @@ async function bootstrap() {
   app.enableCors();
 
   app.setGlobalPrefix('api', {
-    exclude:['/']
+    exclude: [
+      '/', 
+      '/register',
+    ],
   });
 
   // Hybrid application
@@ -58,9 +60,6 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
 
-  // redis
-  // const redisIoAdapter = new RedisIoAdapter(app);
-  // await redisIoAdapter.connectToRedis(configService);
   app.useWebSocketAdapter(new WsAdapter(app));
   
   // swagger - begin

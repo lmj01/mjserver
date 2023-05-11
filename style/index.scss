@@ -1,2 +1,10 @@
 @import './bootstrap';
 
+form {
+    &.index-login {
+        width: 200px;
+    }
+    &.user-create {
+        width: 200px;
+    }
+}
