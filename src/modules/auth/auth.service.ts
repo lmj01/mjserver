@@ -10,11 +10,11 @@ export class AuthService {
         const user = await this.userService.findOne(name);
         // 没有找到
         if (!user) {
-            throw new NotFoundException();
+            throw new NotFoundException(`not found user ${name}`);
         }
         // 密码不对
         if (user.password !== pwd) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('password wrong');
         }
         // 除去password都传给前端
         const { password, ...result } = user;

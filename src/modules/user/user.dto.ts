@@ -9,3 +9,11 @@ export class UserDtoCreate {
     age: number;
     gender:eGender;
 }
+
+/**
+ * 用于查询的
+ */
+export class UserDto {
+    id: number;
+    name: string;
+}

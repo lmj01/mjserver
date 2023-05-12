@@ -30,6 +30,7 @@ html(lang="en")
                     button#btnAudio transcode audio
                     button#btnInitDefault init user
                     button#btnUserAll get all user
+                    button#btnPhotoTest photo test
             .w-50
                 .row.d-flex.m-2
                     label.form-label user list
@@ -129,9 +130,9 @@ html(lang="en")
             });
         script(type='module').
             const eventSource = new EventSource('/api/sse');
-            eventSource.onmessage = ({data} => {
+            eventSource.onmessage = function(data) {
                 console.log('event-message', JSON.parse(data));
-            })
+            };
             eventSource.addEventListener('see', ({data}) => {
                 console.log('event', JSON.parse(data));
             });

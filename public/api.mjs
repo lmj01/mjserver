@@ -20,6 +20,10 @@ export function getUserInit() {
     return request(null, 'get', '/api/user/init', { token: false, json: true });
 }
 
+export function postPhotoTest(data) {
+    return request(data, 'post', '/api/photo/test', { token: true, json: true });
+}
+
 export function getUserAll() {
     return request(null, 'get', '/api/user/all', { token: true, json: true });
 }

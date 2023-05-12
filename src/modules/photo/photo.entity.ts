@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import { User } from "../user/user.entity";
+import { Meta } from "./meta.entity";
 
 /**
  * 每个user可以有多张photo
@@ -26,36 +27,11 @@ export class Photo {
     @Column({default:false})
     isPublished:boolean;
 
-    @Column()
-    userId: number;
-
-    // @ManyToOne(()=>User, (user)=>user.photos)
-    // @JoinColumn({name: 'user_id'})
-    // user: User;
-}
-
-@Entity()
-export class PhotoMeta {
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column({type:'int', default: 0})
-    width: number;
-
-    @Column({type:'int', default: 0})
-    height: number;
-
-    @Column({nullable:true})
-    orientation:string;
-
-    @Column({default:true})
-    compressed:boolean;
-
-    @Column({default: ''})
-    comment:string;
-
-    @OneToOne(()=>Photo)
+    @OneToOne(()=>Meta, meta=>meta.photo)
     @JoinColumn()
-    photo: Photo;
+    meta: Meta;
 
+    @ManyToOne(()=>User, user=>user.photos)
+    user: User;
 }
+

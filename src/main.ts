@@ -15,10 +15,11 @@ import { WsAdapter } from './common/adapters/ws.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    // 直接替换默认的logger
-    logger: WinstonModule.createLogger({
-      instance: loggerInstance,
-    }),
+    logger: process.env.NODE_ENV === 'development' ? 
+      ['log', 'error', 'warn','debug', 'verbose'] : 
+      WinstonModule.createLogger({
+        instance: loggerInstance,
+      }),
     forceCloseConnections: true, // 
   });
   const configService = app.get(ConfigService);

@@ -59,9 +59,11 @@ export class UserService {
             },
         });
     }
-    async findOne(username: string): Promise<User> {
-        return this.userRepo.findOneBy({name: username});
+
+    async findOne(userName: string): Promise<User> {
+        return this.userRepo.findOneBy({name: userName});
     }
+    
     async findAll(): Promise<User[]> {
         return this.userRepo.find({
             select: {

@@ -14,6 +14,7 @@ import { Profile } from './profile.entity';
     ],
     exports: [
         TypeOrmModule, // 导出user repository给其他地方使用
+        // 
         UserService,
     ],
 })

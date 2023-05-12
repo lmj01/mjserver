@@ -24,8 +24,8 @@ import { FileModule } from './queues/file/file.module';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { MathModule } from './microservices/math/math.module';
 import { EventModule } from './modules/event/event.module';
-// import { ArticleModule } from './modules/article/article.module';
-// import { PhotoModule } from './modules/photo/photo.module';
+import { ArticleModule } from './modules/article/article.module';
+import { PhotoModule } from './modules/photo/photo.module';
 
 
 
@@ -48,8 +48,7 @@ import { EventModule } from './modules/event/event.module';
         entities: [
           User,
         ],
-        // no-production
-        synchronize: true, // 注意这个，同步时容易丢失数据，
+        synchronize: configService.get('database.synchronize'), // 注意这个，同步时容易丢失数据，
         autoLoadEntities: true, // 默认加载，就是直接创建表格
       }),
       inject: [ConfigService],
@@ -66,7 +65,7 @@ import { EventModule } from './modules/event/event.module';
     }),
     AuthModule, 
     UserModule,    
-    // PhotoModule,
+    PhotoModule,
     HeroModule, 
     ThrottlerModule.forRoot({
       ttl: 60,
@@ -79,7 +78,7 @@ import { EventModule } from './modules/event/event.module';
     FileModule,
     MathModule,
     EventModule,
-    // ArticleModule,
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany } from "typeorm";
 import { Profile } from './profile.entity';
+import { Photo } from "../photo/photo.entity";
+import { Role } from "../role/role.entity";
 
 @Entity()
 export class User {
@@ -15,8 +17,22 @@ export class User {
     @Column({default: false})
     isActive: boolean;
 
+    /**
+     * 一个用户只有一个配置
+     */
     @OneToOne(()=>Profile, profile=>profile.user)
     @JoinColumn()
     profile:Profile;
+
+    /**
+     * 一个用户拥有多张照片
+     */
+    @OneToMany(() => Photo, photo=>photo.user)
+    @JoinColumn({})
+    photos: Photo[];
+
+    @OneToMany(()=>Role, role=>role.user)
+    // @JoinColumn()
+    role: Role;
 }
 

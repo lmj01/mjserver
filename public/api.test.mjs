@@ -1,7 +1,10 @@
 import {
     getUserAll,
     getUserById,
+    postPhotoTest,
 } from './api.mjs';
+
+window.mjtest = window.mjtest || {};
 
 export function runTest() {
     document.getElementById('btnUserAll').addEventListener('click', () => {
@@ -29,6 +32,12 @@ export function runTest() {
             }
         })
     });
+    document.getElementById('btnPhotoTest').addEventListener('click', () => {
+        postPhotoTest(JSON.stringify(window.mjtest.userDto)).then((res)=>{
+            const { status, response} = res;
+            console.log(response);
+        })
+    });
 }
 
 function selectUserId(e) {
@@ -37,6 +46,10 @@ function selectUserId(e) {
         const {status, response} = res;
         if (status == 200) {
             const data = JSON.parse(response);
+            window.mjtest.userDto = {
+                id: data.id,
+                name: data.name,
+            }
             console.log(data);
         } else {
             console.error(response);
