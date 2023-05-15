@@ -21,3 +21,10 @@ export class ResponseCommon {
     @ApiProperty({description:'文字描述',default:'Success'})
     message:string;
 }
+
+export enum ReturnMessage {
+    OK = 'ok',
+    NG = 'not good or not go or fail',
+    NT = 'not test',
+    POK = 'partial ok',
+}

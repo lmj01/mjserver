@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
 import { User } from './user.entity';
 import { eGender } from "./user.dto";
 
@@ -13,10 +13,10 @@ export class Profile {
     @Column({type: 'int', default: 0})
     age: number;
 
-    @Column({nullable:true})
+    @Column()
     create: Date;
 
-    @Column({nullable:true})
+    @Column()
     update: Date;
 
     @Column({default:false})

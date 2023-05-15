@@ -1,3 +1,5 @@
+import { eRole } from "../role/role.dto";
+
 export enum eGender {
     male = 'male',
     femal = 'female',
@@ -8,6 +10,7 @@ export class UserDtoCreate {
     password: string;
     age: number;
     gender:eGender;
+    role: eRole;
 }
 
 /**

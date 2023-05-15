@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
 import { User } from "src/modules/user/user.entity";
 import { Permission } from "../permission/permission.entity";
 
@@ -10,14 +10,16 @@ export class Role {
     @Column()
     name: string;
 
-    @OneToMany(()=>User, (user)=>user.role)
-    @JoinColumn({name: 'userId'})
-    user: User[];
+    @Column({nullable:true})
+    description: string;
+
+    @ManyToMany(()=>User, (user)=>user.roles)
+    users: User[];
 
     /**
      * @JoinTable()是ManyToMany必须的，就是新建一张表
      */
-    @ManyToMany(()=>Permission)
+    @ManyToMany(()=>Permission, permission=>permission.roles)
     @JoinTable()
     permissions: Permission[];
 }

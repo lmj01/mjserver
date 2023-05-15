@@ -4,6 +4,8 @@ import { User } from "./user.entity";
 import { UserDtoCreate } from "./user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Profile } from "./profile.entity";
+import { Role } from "../role/role.entity";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UserService {
@@ -12,6 +14,7 @@ export class UserService {
         @InjectRepository(Profile) private profileRepo: Repository<Profile>,
         private readonly dataSource:DataSource,
         private readonly logger:Logger,
+        private readonly configService:ConfigService,
     ) {}
 
     async createMany(users: User[]) {
@@ -30,17 +33,23 @@ export class UserService {
             await queryRunner.release();
         }
     }
-    async create(dto:UserDtoCreate): Promise<User> {
+    async create(dto:UserDtoCreate, role: Role): Promise<User> {
         
         const profile = new Profile();
         profile.age = dto.age;
         profile.gender = dto.gender;
+        profile.update = profile.create = new Date();
 
         const user = new User();
         user.name = dto.name;
         user.password = dto.password;
         user.profile = profile;
-        user.isActive = ['admin'].includes(dto.name);
+        if (this.configService.get('global:production')) user.isActive = false;
+        else user.isActive = ['admin'].includes(dto.name);
+        if (Array.isArray(user.roles)) user.roles.push(role);
+        else user.roles = [role];
+        if (Array.isArray(role.users)) role.users.push(user);
+        else role.users = [user];
         profile.user = user;
 
         await this.profileRepo.save(profile);

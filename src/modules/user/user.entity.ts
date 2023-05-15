@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import { Profile } from './profile.entity';
 import { Photo } from "../photo/photo.entity";
 import { Role } from "../role/role.entity";
@@ -31,8 +31,8 @@ export class User {
     @JoinColumn({})
     photos: Photo[];
 
-    @OneToMany(()=>Role, role=>role.user)
-    // @JoinColumn()
-    role: Role;
+    @ManyToMany(()=>Role, role=>role.users)
+    @JoinTable()
+    roles: Role[];
 }
 
