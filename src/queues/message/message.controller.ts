@@ -1,6 +1,6 @@
 import { MessageProducerService } from "./message.producer";
 import { Controller, Get, Query } from "@nestjs/common";
-import { AuthPublic } from "src/modules/auth/auth.decorator";
+import { AuthPublic } from "src/common/auth/auth.decorator";
 
 @Controller('message')
 export class MessageController {

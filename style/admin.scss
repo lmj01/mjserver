@@ -1,0 +1,10 @@
+@import './bootstrap';
+
+form {
+    border: 1px dashed lightblue;
+    &.form-create {
+        width: 300px;
+    }
+}
+
+@import './footer';

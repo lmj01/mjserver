@@ -1,8 +1,6 @@
 doctype html
 html(lang="en")
-    head
-        title= myTitle
-        link(rel='stylesheet' type='text/css' href='./index.css')
+    include layout/head.pug
     body
         .d-flex
             form.index-login.m-2(action="#", method="post")
@@ -39,6 +37,9 @@ html(lang="en")
             a.m-2(href="/api-doc/user") ApiDoc user 
             a.m-2(href="/api-doc/auth") ApiDoc auth 
             a.m-2(href="/register") Register
+            a.m-2(href="/admin") Register
+        
+        include layout/foot.pug
 
         script(type='module').
             import { postLogin, getProfile, getFilePackage, authToken, postAudioTranscode, postFile, postListFile, getUserInit } from './api.mjs';

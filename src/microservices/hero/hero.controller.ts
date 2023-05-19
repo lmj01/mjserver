@@ -6,7 +6,7 @@ import { ClientGrpc, GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices"
 import { HERO_SERVICE, HERO_PACKAGE } from "../constants";
 import { ApiTags, ApiOkResponse } from "@nestjs/swagger";
 import { HeroResponse } from "./hero.vo";
-import { AuthPublic } from "src/modules/auth/auth.decorator";
+import { AuthPublic } from "src/common/auth/auth.decorator";
 
 interface HeroService {
     findOne(data: HeroById): Observable<Hero>;

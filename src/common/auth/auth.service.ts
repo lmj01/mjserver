@@ -1,10 +1,13 @@
 import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'
-import { UserService } from 'src/modules/user/user.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
-    constructor(private userService:UserService, private jwtService: JwtService) {}
+    constructor(
+        private userService: UserService, 
+        private jwtService: JwtService
+    ) {}
 
     async signIn(name: string, pwd: string) {
         const user = await this.userService.findOne(name);

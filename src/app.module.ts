@@ -3,18 +3,15 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AppController } from './app/app.controller';
 import { AppService } from './app/app.service';
 import { HeroModule } from 'src/microservices/hero/hero.module';
-import { UserModule } from 'src/modules/user/user.module';
-import { AuthModule } from 'src/modules/auth/auth.module';
+import { AuthModule } from 'src/common/auth/auth.module';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { RoleModule } from 'src/modules/role/role.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configGlobal from './config/global';
 import configDatabase from './config/database';
 import configRedis from './config/redis';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
-import { User } from './modules/user/user.entity';
-import { PermissionModule } from './modules/permission/permission.module';
+import { PermissionModule } from './common/permission/permission.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { AllExceptionFilter } from './common/filters/allException.filter';
 import { AudioModule } from './queues/audio/audio.module';
@@ -25,7 +22,9 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { MathModule } from './microservices/math/math.module';
 import { EventModule } from './modules/event/event.module';
 import { ArticleModule } from './modules/article/article.module';
-import { PhotoModule } from './modules/photo/photo.module';
+import { PhotoModule } from './common/photo/photo.module';
+import { UserModule } from './common/user/user.module';
+import { RoleModule } from './common/role/role.module';
 
 
 
@@ -46,7 +45,6 @@ import { PhotoModule } from './modules/photo/photo.module';
         password: configService.get('database.password'),
         database: configService.get('database.db') as string,
         entities: [
-          User,
         ],
         synchronize: configService.get('database.synchronize'), // 注意这个，同步时容易丢失数据，
         autoLoadEntities: true, // 默认加载，就是直接创建表格

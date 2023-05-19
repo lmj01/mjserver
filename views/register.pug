@@ -1,8 +1,6 @@
 doctype html
 html(lang="en")
-    head
-        title= myTitle
-        link(rel='stylesheet' type='text/css' href='./index.css')
+    include layout/head.pug
     body
         form.user-create.p-2.m-2(action="#", method="post")
             .row 
@@ -24,6 +22,8 @@ html(lang="en")
                 button#btnSubmit.btn.btn-primary.w-auto.mx-auto(type="button") create
         .d-flex 
             a(href="/") Home Index
+            
+        include layout/foot.pug
 
         script(type='module').
             import { postLogin, getProfile, getFilePackage, authToken, postAudioTranscode, postFile, postListFile } from './api.mjs';

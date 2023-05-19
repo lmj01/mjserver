@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Query, Logger } from "@nestjs/common";
-import { AuthPublic } from "../../modules/auth/auth.decorator";
+import { AuthPublic } from "../../common/auth/auth.decorator";
 import { AudioProducerService } from "./audio.producer";
 
 @Controller('audio')

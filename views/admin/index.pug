@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+    include ../layout/head.pug
+    body
+        .d-flex.m-2
+            form.form-create(action="#", method="post")
+                .my-2 
+                    label.form-label(for="name") enter name:
+                    input.form-control(type="text" id="name" name="name")
+                .my-2
+                    label.form-label(for="password") enter password:
+                    input.form-control(type="password" id="password" name="password")
+                .my-2
+                    label.form-label(for="password") select role:
+                    input.form-control(type="password" id="password" name="password")
+                .my-2
+                    label.form-label(for="password") select permission:
+                    input.form-control(type="password" id="password" name="password")
+                .d-flex.my-2
+                    button#btnCreateUser.btn.btn-primary.w-auto.mx-auto(type="button") create new User
+        
+        include ../layout/foot.pug
+
+        script(type='module').
+            import { init } from './admin.mjs';
+            init();
+            

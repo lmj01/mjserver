@@ -2,7 +2,7 @@ import { Controller, Inject, Get } from "@nestjs/common";
 import { MATH_SERVICE } from "../constants";
 import { ClientProxy, MessagePattern } from "@nestjs/microservices";
 import { Observable } from 'rxjs';
-import { AuthPublic } from "src/modules/auth/auth.decorator";
+import { AuthPublic } from "src/common/auth/auth.decorator";
 
 @Controller('math')
 export class MathController {

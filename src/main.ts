@@ -6,21 +6,22 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { grpcClientOptions } from './microservices/grpcClient.options';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
-import { UserModule } from './modules/user/user.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from './common/auth/auth.module';
 import { WinstonModule } from 'nest-winston';
 import { loggerInstance } from './config/configWinston';
 import { FileModule } from './queues/file/file.module';
 import { WsAdapter } from './common/adapters/ws.adapter';
+import { UserModule } from './common/user/user.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: process.env.NODE_ENV === 'development' ? 
-      ['log', 'error', 'warn','debug', 'verbose'] : 
-      WinstonModule.createLogger({
-        instance: loggerInstance,
-      }),
-    forceCloseConnections: true, // 
+    logger:
+      process.env.NODE_ENV === 'development'
+        ? ['log', 'error', 'warn', 'debug', 'verbose']
+        : WinstonModule.createLogger({
+            instance: loggerInstance,
+          }),
+    forceCloseConnections: true, //
   });
   const configService = app.get(ConfigService);
   app.useStaticAssets(join(__dirname, '..', 'public'));
@@ -30,10 +31,7 @@ async function bootstrap() {
   app.enableCors();
 
   app.setGlobalPrefix('api', {
-    exclude: [
-      '/', 
-      '/register',
-    ],
+    exclude: ['/', '/register', '/admin'],
   });
 
   // Hybrid application
@@ -53,8 +51,8 @@ async function bootstrap() {
     options: {
       host: configService.get('redis.host'),
       port: +configService.get('redis.port'),
-    }
-  })
+    },
+  });
 
   // gRPC
   app.connectMicroservice<MicroserviceOptions>(grpcClientOptions);
@@ -62,7 +60,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   app.useWebSocketAdapter(new WsAdapter(app));
-  
+
   // swagger - begin
   const options = new DocumentBuilder()
     .setTitle('api-doc')
@@ -72,7 +70,7 @@ async function bootstrap() {
     // .addOAuth2()
     .build();
   const document = SwaggerModule.createDocument(app, options, {
-    include:[UserModule, FileModule],
+    include: [UserModule, FileModule],
   });
   SwaggerModule.setup('api-doc/user', app, document);
 
@@ -82,16 +80,16 @@ async function bootstrap() {
     .setVersion('1.0.0')
     .build();
   const document1 = SwaggerModule.createDocument(app, options1, {
-    include:[AuthModule, AppModule],
+    include: [AuthModule, AppModule],
   });
   SwaggerModule.setup('api-doc/auth', app, document1);
   // swagger - end
 
   app.enableShutdownHooks();
-  
+
   await app.listen(configService.get('global.port'));
-  app.getUrl().then(res=>{    
-    console.log('listen to', res)
-  })
+  app.getUrl().then((res) => {
+    console.log('listen to', res);
+  });
 }
 bootstrap();

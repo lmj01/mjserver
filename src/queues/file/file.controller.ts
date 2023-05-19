@@ -2,7 +2,7 @@ import { Controller, UploadedFile, UseInterceptors, Post, Body, Logger, Uploaded
 import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
 import { SampleDto } from './file.dto';
 import { Express, Response } from 'express';
-import { AuthPublic } from 'src/modules/auth/auth.decorator';
+import { AuthPublic } from 'src/common/auth/auth.decorator';
 import { utilWriteFile, utilReadFile } from 'src/utils/wrapFilesystem';
 
 @Controller('file')
