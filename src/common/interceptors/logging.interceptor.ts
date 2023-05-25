@@ -1,6 +1,6 @@
-import { NestInterceptor, Injectable, ExecutionContext, CallHandler, Inject, Logger } from '@nestjs/common';
+import { NestInterceptor, Injectable, ExecutionContext, CallHandler, Logger } from '@nestjs/common';
 import { Observable, tap, map } from 'rxjs';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { getReqMainInfo } from 'src/utils/utilRequest';
 
 @Injectable()
@@ -12,18 +12,6 @@ export class LoggingInterceptor implements NestInterceptor {
 		const http = context.switchToHttp();
 		if (http) {
 			const request = http.getRequest<Request>();
-
-			/**
-			 * SharedArrayBuffer
-			 */
-			const response = http.getRequest<Response>();
-			response.set('Cross-Origin-Embedder-Policy', 'require-corp');
-			response.set('Cross-Origin-Opener-Policy', 'same-origin');
-
-			response.header('Cross-Origin-Embedder-Policy', 'require-corp');
-			response.header('Cross-Origin-Opener-Policy', 'same-origin');
-			this.logger.log('header', response);
-
 			this.logger.log('httpRequestPath', request.url);
 		}
 		const now = Date.now();
