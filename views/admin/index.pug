@@ -11,11 +11,14 @@ html(lang="en")
                     label.form-label(for="password") enter password:
                     input.form-control(type="password" id="password" name="password")
                 .my-2
-                    label.form-label(for="password") select role:
-                    input.form-control(type="password" id="password" name="password")
+                    label.form-label(for="role") select role:
+                    select.form-select(type="role" id="role" name="role")
                 .my-2
-                    label.form-label(for="password") select permission:
-                    input.form-control(type="password" id="password" name="password")
+                    label.form-label(for="gender") select role:
+                    select.form-select(type="gender" id="gender" name="gender")
+                .my-2
+                    label.form-label(for="permission") select permission:
+                    select.form-select(type="permission" id="permission" name="permission")
                 .d-flex.my-2
                     button#btnCreateUser.btn.btn-primary.w-auto.mx-auto(type="button") create new User
         

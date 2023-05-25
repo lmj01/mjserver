@@ -1,17 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
-import { Role } from "../role/role.entity";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Role } from '../role/role.entity';
 
 @Entity()
 export class Permission {
-    @PrimaryGeneratedColumn()
-    id: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-    @Column({type:'bigint'})
-    code: number;
+	@Column({ type: 'bigint' })
+	code: number;
 
-    @Column({nullable:true})
-    description: string;
+	@Column({ type: 'varchar' })
+	label: string;
 
-    @ManyToMany(()=>Role, role=>role.permissions)
-    roles: Role[];
+	@Column({ nullable: true })
+	description: string;
+
+	@ManyToMany(() => Role, (role) => role.permissions)
+	roles: Role[];
 }
